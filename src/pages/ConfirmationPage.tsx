@@ -1,134 +1,134 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { CheckCircleIcon, DownloadIcon, PrinterIcon, CalendarIcon, ClockIcon, MapPinIcon } from 'lucide-react';
-import { QRCode } from '../components/QRCode';
-// Mock ticket data
-const ticketData = {
-  id: 'TKT123456789',
-  event: {
-    id: '5',
-    title: 'Rock in the City 2023',
-    date: 'August 20, 2023',
-    time: '7:00 PM',
-    location: 'Downtown Arena, New York',
-    image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-  },
-  ticketType: 'VIP',
-  seatInfo: 'Section A, Row 3, Seat 12',
-  purchaseDate: 'July 15, 2023',
-  purchaseTime: '10:30 AM',
-  price: 199.99,
-  serviceFee: 10.0,
-  total: 209.99
-};
+import React from "react";
+import { useParams, useLocation, Link } from "react-router-dom";
+import { Download, Printer } from "lucide-react";
+
 export function ConfirmationPage() {
+  const { ticketId } = useParams();
+  const location = useLocation();
+
+  // data passed from purchase page
   const {
-    ticketId
-  } = useParams<{
-    ticketId: string;
-  }>();
-  // In a real app, you would fetch the ticket data based on ticketId
-  const ticket = {
-    ...ticketData,
-    id: ticketId || ticketData.id
+    event,
+    ticketType,
+    ticketQty,
+    subtotal,
+    formData,
+  } = (location.state as any) || {};
+
+  // ✅ Handle ticket download (as text file for now)
+  const handleDownload = () => {
+    const ticketContent = `
+Ticket ID: ${ticketId}
+Event: ${event?.title}
+Date: ${event?.date} at ${event?.time}
+Location: ${event?.location}
+Ticket: ${ticketQty}x ${ticketType}
+Total Paid: Ksh ${subtotal?.toLocaleString()}
+
+Buyer:
+${formData?.firstName} ${formData?.lastName}
+${formData?.email}
+${formData?.phone}
+    `;
+
+    const blob = new Blob([ticketContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ticket-${ticketId}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
-  return <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="text-center mb-8">
-        <div className="flex justify-center">
-          <CheckCircleIcon className="h-16 w-16 text-green-500" />
+
+  // ✅ Handle print
+  const handlePrint = () => {
+    window.print();
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h1 className="text-2xl font-bold text-green-600 mb-4">
+        Purchase Successful 🎉
+      </h1>
+
+      <p className="text-gray-700 mb-6">
+        Thank you for your purchase! Your ticket details are below.
+      </p>
+
+      {/* Ticket ID */}
+      <div className="bg-gray-50 p-4 rounded-lg mb-6">
+        <p className="text-sm text-gray-500">Ticket ID</p>
+        <p className="text-lg font-semibold text-gray-900">{ticketId}</p>
+      </div>
+
+      {/* Event Details */}
+      {event && (
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            Event Details
+          </h2>
+          <p className="font-medium">{event.title}</p>
+          <p className="text-sm text-gray-600">
+            {event.date} • {event.time}
+          </p>
+          <p className="text-sm text-gray-600">{event.location}</p>
         </div>
-        <h1 className="mt-4 text-3xl font-extrabold text-gray-900">
-          Purchase Successful!
-        </h1>
-        <p className="mt-2 text-lg text-gray-600">
-          Your tickets have been confirmed and sent to your email.
-        </p>
-      </div>
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
-        <div className="p-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                {ticket.event.title}
-              </h2>
-              <div className="mt-2 flex items-center text-gray-600">
-                <CalendarIcon className="h-5 w-5 mr-2" />
-                <span>{ticket.event.date}</span>
-              </div>
-              <div className="mt-1 flex items-center text-gray-600">
-                <ClockIcon className="h-5 w-5 mr-2" />
-                <span>{ticket.event.time}</span>
-              </div>
-              <div className="mt-1 flex items-center text-gray-600">
-                <MapPinIcon className="h-5 w-5 mr-2" />
-                <span>{ticket.event.location}</span>
-              </div>
-            </div>
-            <img src={ticket.event.image} alt={ticket.event.title} className="hidden md:block h-24 w-24 object-cover rounded" />
-          </div>
-          <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between">
-            <div>
-              <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
-                {ticket.ticketType}
-              </div>
-              <p className="mt-2 text-gray-700">Seat: {ticket.seatInfo}</p>
-              <p className="text-gray-700">Ticket #: {ticket.id}</p>
-            </div>
-            <div className="mt-4 md:mt-0 flex items-center justify-center">
-              <QRCode value={ticket.id} size={120} />
-            </div>
-          </div>
-          <div className="mt-8 border-t border-gray-200 pt-6">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Order Details
-            </h3>
-            <div className="mt-4">
-              <div className="flex justify-between py-2">
-                <span className="text-gray-600">Purchase Date</span>
-                <span className="text-gray-900">
-                  {ticket.purchaseDate} at {ticket.purchaseTime}
-                </span>
-              </div>
-              <div className="flex justify-between py-2 border-t border-gray-100">
-                <span className="text-gray-600">Ticket Price</span>
-                <span className="text-gray-900">
-                  ${ticket.price.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between py-2 border-t border-gray-100">
-                <span className="text-gray-600">Service Fee</span>
-                <span className="text-gray-900">
-                  ${ticket.serviceFee.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between py-2 border-t border-gray-100 font-semibold">
-                <span>Total</span>
-                <span>${ticket.total.toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 flex flex-col sm:flex-row sm:justify-between gap-4">
-            <button className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-              <DownloadIcon className="h-5 w-5 mr-2" />
-              Download Ticket
-            </button>
-            <button className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-              <PrinterIcon className="h-5 w-5 mr-2" />
-              Print Ticket
-            </button>
-            <Link to="/my-tickets" className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-              View My Tickets
-            </Link>
-          </div>
+      )}
+
+      {/* Ticket Info */}
+      {ticketType && (
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            Ticket Info
+          </h2>
+          <p>
+            {ticketQty}x {ticketType} Ticket{ticketQty > 1 ? "s" : ""}
+          </p>
+          <p className="text-indigo-600 font-semibold">
+            Ksh {subtotal?.toLocaleString()}
+          </p>
         </div>
+      )}
+
+      {/* Buyer Info */}
+      {formData && (
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            Buyer Information
+          </h2>
+          <p>
+            {formData.firstName} {formData.lastName}
+          </p>
+          <p>{formData.email}</p>
+          <p>{formData.phone}</p>
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+        <button
+          onClick={handleDownload}
+          className="flex items-center justify-center gap-2 bg-indigo-600 text-white px-5 py-3 rounded-md shadow hover:bg-indigo-700"
+        >
+          <Download className="h-5 w-5" />
+          Download Ticket
+        </button>
+
+        <button
+          onClick={handlePrint}
+          className="flex items-center justify-center gap-2 bg-gray-100 text-gray-800 px-5 py-3 rounded-md shadow hover:bg-gray-200"
+        >
+          <Printer className="h-5 w-5" />
+          Print Ticket
+        </button>
+
+        <Link
+          to="/"
+          className="flex items-center justify-center bg-green-600 text-white px-5 py-3 rounded-md shadow hover:bg-green-700"
+        >
+          Back to Home
+        </Link>
       </div>
-      <div className="mt-8 text-center">
-        <p className="text-gray-600">
-          Have questions about your order?{' '}
-          <a href="#" className="text-indigo-600 hover:text-indigo-800">
-            Contact Support
-          </a>
-        </p>
-      </div>
-    </div>;
+    </div>
+  );
 }

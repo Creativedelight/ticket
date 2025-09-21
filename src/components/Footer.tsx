@@ -9,7 +9,7 @@ export function Footer() {
             <div className="flex items-center">
               <TicketIcon className="h-8 w-8 text-indigo-400" />
               <span className="ml-2 text-xl font-bold text-white">
-                TicketWave
+                KUCOSA TICKETS
               </span>
             </div>
             <p className="mt-2 text-sm text-gray-400">
@@ -35,7 +35,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2">
               <li>
                 <Link to="/events" className="text-base text-gray-400 hover:text-white">
-                  All Events
+                  Home
                 </Link>
               </li>
               <li>
@@ -112,7 +112,7 @@ export function Footer() {
         </div>
         <div className="mt-8 border-t border-gray-700 pt-8 md:flex md:items-center md:justify-between">
           <p className="text-base text-gray-400 md:mt-0">
-            &copy; {new Date().getFullYear()} TicketWave, Inc. All rights
+            &copy; {new Date().getFullYear()} KUCOSA, Inc. All rights
             reserved.
           </p>
         </div>

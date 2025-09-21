@@ -1,5 +1,14 @@
 import React from 'react';
 import './index.css';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { AppRouter } from './AppRouter';
-render(<AppRouter />, document.getElementById('root'));
+
+const container = document.getElementById('root');
+if (container) {
+  const root = createRoot(container); // React 18 API
+  root.render(
+    <React.StrictMode>
+      <AppRouter />
+    </React.StrictMode>
+  );
+}

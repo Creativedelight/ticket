@@ -14,29 +14,17 @@ export function Navbar() {
               <Link to="/" className="flex items-center">
                 <TicketIcon className="h-8 w-8 text-indigo-600" />
                 <span className="ml-2 text-xl font-bold text-indigo-600">
-                  TicketWave
+                  KUCOSA TICKETS
                 </span>
               </Link>
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/events" className="text-gray-600 hover:text-gray-900">
-              Events
+            <Link to="" className="text-gray-600 hover:text-gray-900">
+              Home
             </Link>
             <Link to="/my-tickets" className="text-gray-600 hover:text-gray-900">
               My Tickets
-            </Link>
-            <Link to="#" className="text-gray-600 hover:text-gray-900">
-              Contact
-            </Link>
-            <Link to="/admin" className="text-gray-600 hover:text-gray-900">
-              Admin
-            </Link>
-            <Link to="/login" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 border-indigo-600">
-              <UserIcon className="h-4 w-4 mr-1" /> Login
-            </Link>
-            <Link to="/register" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-              Register
             </Link>
           </div>
           <div className="flex items-center md:hidden">
@@ -49,24 +37,13 @@ export function Navbar() {
       {/* Mobile menu, show/hide based on menu state */}
       {isMenuOpen && <div className="md:hidden">
           <div className="pt-2 pb-3 space-y-1">
-            <Link to="/events" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-              Events
+            <Link to="" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+              Home
             </Link>
             <Link to="/my-tickets" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
               My Tickets
             </Link>
-            <Link to="#" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-              Contact
-            </Link>
-            <Link to="/admin" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-              Admin
-            </Link>
-            <Link to="/login" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-              Login
-            </Link>
-            <Link to="/register" className="block px-3 py-2 text-base font-medium text-indigo-600 hover:text-indigo-800">
-              Register
-            </Link>
+            
           </div>
         </div>}
     </nav>;

@@ -1,0 +1,14 @@
+.ticket-container {
+  min-height: 170vh;
+}
+
+.ticket-list {
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.loading-text {
+  text-align: center;
+  margin-top: 1rem;
+  color: #6b7280; /* Tailwind gray-500 */
+}

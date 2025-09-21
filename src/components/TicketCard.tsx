@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { CalendarIcon, ClockIcon, MapPinIcon, DownloadIcon, PrinterIcon } from 'lucide-react';
 import { QRCode } from './QRCode';
+
 interface TicketCardProps {
   id: string;
   eventName: string;
@@ -13,6 +13,7 @@ interface TicketCardProps {
   ticketCode: string;
   eventImage: string;
 }
+
 export function TicketCard({
   id,
   eventName,
@@ -24,63 +25,52 @@ export function TicketCard({
   ticketCode,
   eventImage
 }: TicketCardProps) {
-  return <div className="bg-white rounded-lg overflow-hidden shadow-md border border-gray-200">
-      <div className="md:flex">
-        <div className="md:w-1/3">
-          <img src={eventImage} alt={eventName} className="w-full h-48 md:h-full object-cover" />
-        </div>
-        <div className="p-6 md:w-2/3">
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-xl font-bold text-gray-900">{eventName}</h3>
-              <div className="mt-2 flex items-center text-gray-600">
-                <CalendarIcon className="h-4 w-4 mr-2" />
-                <span>{eventDate}</span>
-              </div>
-              <div className="mt-1 flex items-center text-gray-600">
-                <ClockIcon className="h-4 w-4 mr-2" />
-                <span>{eventTime}</span>
-              </div>
-              <div className="mt-1 flex items-center text-gray-600">
-                <MapPinIcon className="h-4 w-4 mr-2" />
-                <span>{location}</span>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium">
-                  {ticketType}
-                </span>
-                <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
-                  Seat: {seatInfo}
-                </span>
-              </div>
-            </div>
-            <div className="hidden md:block">
-              <QRCode value={ticketCode} size={100} />
-            </div>
-          </div>
-          <div className="md:hidden mt-4 flex justify-center">
-            <QRCode value={ticketCode} size={150} />
-          </div>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <button className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
-              <DownloadIcon className="h-4 w-4 mr-2" />
-              Download
-            </button>
-            <button className="flex items-center px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition">
-              <PrinterIcon className="h-4 w-4 mr-2" />
-              Print
-            </button>
-            <Link to={`/events/${id}`} className="flex items-center px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition ml-auto">
-              Event Details
-            </Link>
-          </div>
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <p className="text-xs text-gray-500">Ticket Code: {ticketCode}</p>
-            <p className="text-xs text-gray-500 mt-1">
-              Present this ticket (printed or digital) at the entrance.
-            </p>
-          </div>
+
+  const handleDownload = () => {
+    const element = document.createElement('a');
+    const file = new Blob([`Ticket Code: ${ticketCode}\nEvent: ${eventName}\nDate: ${eventDate}\nTime: ${eventTime}\nLocation: ${location}\nTicket Type: ${ticketType}\nSeats: ${seatInfo}`], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = `Ticket-${ticketCode}.txt`;
+    document.body.appendChild(element);
+    element.click();
+  };
+
+  const handlePrint = () => {
+    const printContent = `
+      <h1>${eventName}</h1>
+      <p>Date: ${eventDate}</p>
+      <p>Time: ${eventTime}</p>
+      <p>Location: ${location}</p>
+      <p>Ticket Type: ${ticketType}</p>
+      <p>Seats: ${seatInfo}</p>
+      <p>Ticket Code: ${ticketCode}</p>
+    `;
+    const newWin = window.open('', '', 'width=600,height=400');
+    newWin?.document.write(printContent);
+    newWin?.document.close();
+    newWin?.print();
+  };
+
+  return (
+    <div className="bg-white rounded-lg overflow-hidden shadow-md border border-gray-200 p-4 flex flex-col md:flex-row gap-4">
+      <img src={eventImage} alt={eventName} className="w-full md:w-48 h-32 object-cover rounded" />
+      <div className="flex-1">
+        <h2 className="font-bold text-lg">{eventName}</h2>
+        <p className="text-sm text-gray-600"><CalendarIcon className="inline h-4 w-4 mr-1"/> {eventDate}</p>
+        <p className="text-sm text-gray-600"><ClockIcon className="inline h-4 w-4 mr-1"/> {eventTime}</p>
+        <p className="text-sm text-gray-600"><MapPinIcon className="inline h-4 w-4 mr-1"/> {location}</p>
+        <p className="text-sm text-gray-600">Type: {ticketType}</p>
+        <p className="text-sm text-gray-600">Seats: {seatInfo}</p>
+        <QRCode value={ticketCode} /> {/* QR code for scanning */}
+        <div className="mt-2 flex gap-2">
+          <button onClick={handleDownload} className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+            <DownloadIcon className="h-4 w-4"/> Download
+          </button>
+          <button onClick={handlePrint} className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+            <PrinterIcon className="h-4 w-4"/> Print
+          </button>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 }
