@@ -1,4 +1,6 @@
 import React from 'react';
+import React, { useEffect, useState } from "react";
+
 import { Link } from 'react-router-dom';
 import { CalendarIcon, SearchIcon, TicketIcon, TrendingUpIcon, MapPinIcon } from 'lucide-react';
 import kaleeImage from "./kalee.jpg"; 
@@ -14,71 +16,47 @@ const categories = [
   { name: 'Workshop', icon: '🛠️', color: 'bg-red-500' }
 ];
 
-export function HomePage() {
+export function HomePageHero() {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoaded(true), 100); // slight delay for animation
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div>
-      {/* Hero Section */}
-      <div className="bg-indigo-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-              Discover Amazing Events
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-xl">
-              Find and book tickets for concerts, sports, theatre, comedy, and
-              more events near you.
-            </p>
-            <div className="mt-10 max-w-xl mx-auto">
-              <div className="flex rounded-md shadow-sm">
-                <div className="relative flex items-stretch flex-grow">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md pl-10 sm:text-sm border-gray-300 text-gray-900"
-                    placeholder="Search for events, artists, teams..."
-                  />
-                </div>
-                <button
-                  type="button"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-indigo-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Search
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Background image */}
+      <img
+        src={kaleeImage}
+        alt="KALEE Night"
+        className={`absolute top-0 left-0 w-full h-full object-cover transition-all duration-2000 ease-in-out
+          ${loaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-110 blur-md"}`}
+      />
 
-      {/* Categories Section */}
-      <div className="py-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-gray-900">
-            Browse Categories
-          </h2>
-          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                to={`/events?category=${category.name}`}
-                className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition"
-              >
-                <div
-                  className={`${category.color} text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl`}
-                >
-                  {category.icon}
-                </div>
-                <span className="mt-2 text-sm font-medium text-gray-900">
-                  {category.name}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* Overlay gradient */}
+      <div className="absolute top-0 left-0 w-full h-full bg-black/40"></div>
 
+      {/* Text content */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+        <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6">
+          KALEE NIGHT
+        </h1>
+        <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl">
+          Experience the biggest KALEE NIGHT of the year with unforgettable
+          performances, lights, and vibes.
+        </p>
+        <Link
+          to="/events/kalee-night"
+          className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition"
+        >
+          Get Tickets
+        </Link>
+      </div>
+    </div>
+  );
+}
+     
       {/* Featured Event (replaces Upcoming Events) */}
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
