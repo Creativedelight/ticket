@@ -48,7 +48,7 @@ ${formData?.phone}
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h1 className="text-2xl font-bold text-green-600 mb-4">
-        Purchase Successful 🎉
+        Purchase Successful and ticket sent to your email!🎉
       </h1>
 
       <p className="text-gray-700 mb-6">

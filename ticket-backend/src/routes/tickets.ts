@@ -1,29 +1,29 @@
 // src/routes/tickets.ts
 import express from "express";
 import pool from "../db";
+import nodemailer from "nodemailer";
 
 const router = express.Router();
 
-// POST /api/tickets - create a new ticket
 router.post("/", async (req, res) => {
+  const {
+    ticketCode,
+    eventName,
+    eventDate,
+    eventTime,
+    location,
+    ticketType,
+    seats,
+    email,
+    name,
+  } = req.body;
+
+  if (!ticketCode || !eventName || !ticketType || !seats || !email || !name) {
+    return res.status(400).json({ error: "Missing required ticket information" });
+  }
+
   try {
-    const {
-      ticketCode,
-      eventName,
-      eventDate,
-      eventTime,
-      location,
-      ticketType,
-      seats,
-      email,
-      name
-    } = req.body;
-
-    // Validate required fields
-    if (!ticketCode || !eventName || !ticketType || !seats || !email || !name) {
-      return res.status(400).json({ error: "Missing required ticket information" });
-    }
-
+    // 1️⃣ Save ticket in database
     await pool.query(
       `INSERT INTO tickets 
         (ticket_code, event_name, event_date, event_time, location, ticket_type, seats, email, name)
@@ -31,45 +31,43 @@ router.post("/", async (req, res) => {
       [ticketCode, eventName, eventDate, eventTime, location, ticketType, seats, email, name]
     );
 
+    // 2️⃣ Configure Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 587, // 587 for STARTTLS, 465 for SSL
+      secure: process.env.SMTP_PORT === "465", // true for 465, false for 587
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    // ✅ Test SMTP connection
+    await transporter.verify();
+
+    // 3️⃣ Prepare ticket content
+    const ticketContent = `
+Ticket Code: ${ticketCode}
+Event: ${eventName}
+Date: ${eventDate} at ${eventTime}
+Location: ${location}
+Ticket: ${seats}x ${ticketType}
+
+Buyer: ${name}, ${email}
+`;
+
+    // 4️⃣ Send ticket via email
+    await transporter.sendMail({
+      from: `"TicketMaster" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: `Your Ticket for ${eventName}`,
+      text: ticketContent,
+    });
+
     res.json({ success: true, ticketCode });
-  } catch (error) {
-    console.error("Error creating ticket:", error);
-    res.status(500).json({ error: "Failed to save ticket" });
-  }
-});
-
-// GET /api/tickets?email=... - fetch tickets by email
-router.get("/", async (req, res) => {
-  const email = req.query.email as string;
-
-  if (!email) return res.status(400).json({ error: "Email is required" });
-
-  try {
-    const result = await pool.query(
-      `SELECT 
-        ticket_code AS "ticketCode",
-        event_name AS "eventName",
-        event_date AS "eventDate",
-        event_time AS "eventTime",
-        location,
-        ticket_type AS "ticketType",
-        seats,
-        email,
-        name
-       FROM tickets
-       WHERE email = $1
-       ORDER BY ticket_code DESC`,
-      [email]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "No tickets found for this email" });
-    }
-
-    res.json(result.rows);
-  } catch (err) {
-    console.error("Error fetching tickets:", err);
-    res.status(500).json({ error: "Failed to fetch tickets" });
+  } catch (err: any) {
+    console.error("Error saving ticket or sending email:", err.message || err);
+    res.status(500).json({ error: "Failed to save ticket or send email" });
   }
 });
 

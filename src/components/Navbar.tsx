@@ -23,9 +23,6 @@ export function Navbar() {
             <Link to="" className="text-gray-600 hover:text-gray-900">
               Home
             </Link>
-            <Link to="/my-tickets" className="text-gray-600 hover:text-gray-900">
-              My Tickets
-            </Link>
           </div>
           <div className="flex items-center md:hidden">
             <button onClick={toggleMenu} className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
