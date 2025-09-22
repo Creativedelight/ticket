@@ -12,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@vercel/node": "^5.3.23",
     "axios": "^1.12.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
@@ -26,6 +25,7 @@
     "@types/node": "^24.5.2",
     "@types/nodemailer": "^7.0.1",
     "@types/pg": "^8.15.5",
+    "@vercel/node": "^5.3.23",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }
