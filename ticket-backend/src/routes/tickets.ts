@@ -70,5 +70,8 @@ Buyer: ${name}, ${email}
     res.status(500).json({ error: "Failed to save ticket or send email" });
   }
 });
+router.get("/", (req, res) => {
+  res.json({ message: "Tickets endpoint works ✅" });
+});
 
 export default router;
