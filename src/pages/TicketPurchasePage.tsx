@@ -47,7 +47,7 @@ export function TicketPurchasePage() {
   // ✅ MPESA payment function
   const handlePayment = async () => {
     try {
-      const res = await fetch("http://ticket-backend-mu.vercel.app/api/mpesa/stkpush", {
+      const res = await fetch("https://ticket-backend-mu.vercel.app/api/mpesa/stkpush", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
