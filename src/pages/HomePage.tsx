@@ -6,15 +6,6 @@ import { CalendarIcon, SearchIcon, TicketIcon, TrendingUpIcon, MapPinIcon } from
 import kaleeImage from "./kalee.jpg"; 
 
 
-// Mock data for categories
-const categories = [
-  { name: 'Music', icon: '🎵', color: 'bg-pink-500' },
-  { name: 'Sports', icon: '🏆', color: 'bg-blue-500' },
-  { name: 'Theatre', icon: '🎭', color: 'bg-purple-500' },
-  { name: 'Comedy', icon: '😂', color: 'bg-yellow-500' },
-  { name: 'Conference', icon: '🎤', color: 'bg-green-500' },
-  { name: 'Workshop', icon: '🛠️', color: 'bg-red-500' }
-];
 
 export function HomePageHero() {
   const [loaded, setLoaded] = useState(false);
