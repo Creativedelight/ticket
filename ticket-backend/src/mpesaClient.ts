@@ -3,20 +3,20 @@ import axios from "axios";
 const mode = process.env.MPESA_MODE || "sandbox";
 
 const SHORTCODE = mode === "production"
-  ? process.env.MPESA_SHORTCODE_PROD
-  : process.env.MPESA_SHORTCODE_SANDBOX;
+  ? process.env.MPESA_SHORTCODE_PROD!
+  : process.env.MPESA_SHORTCODE_SANDBOX!;
 
 const PASSKEY = mode === "production"
-  ? process.env.MPESA_PASSKEY_PROD
-  : process.env.MPESA_PASSKEY_SANDBOX;
+  ? process.env.MPESA_PASSKEY_PROD!
+  : process.env.MPESA_PASSKEY_SANDBOX!;
 
 const CONSUMER_KEY = mode === "production"
-  ? process.env.MPESA_CONSUMER_KEY_PROD
-  : process.env.MPESA_CONSUMER_KEY_SANDBOX;
+  ? process.env.MPESA_CONSUMER_KEY_PROD!
+  : process.env.MPESA_CONSUMER_KEY_SANDBOX!;
 
 const CONSUMER_SECRET = mode === "production"
-  ? process.env.MPESA_CONSUMER_SECRET_PROD
-  : process.env.MPESA_CONSUMER_SECRET_SANDBOX;
+  ? process.env.MPESA_CONSUMER_SECRET_PROD!
+  : process.env.MPESA_CONSUMER_SECRET_SANDBOX!;
 
 // Get access token
 export async function getAccessToken() {
