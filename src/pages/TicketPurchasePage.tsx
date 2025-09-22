@@ -47,7 +47,7 @@ export function TicketPurchasePage() {
   // ✅ MPESA payment function
   const handlePayment = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/mpesa/stkpush", {
+      const res = await fetch("http://ticket-backend-r5ksnrq64-creativedelights-projects.vercel.app/api/mpesa/stkpush", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -81,7 +81,7 @@ export function TicketPurchasePage() {
 
     try {
       // 1️⃣ Save ticket to backend
-      const res = await fetch("http://localhost:4000/api/tickets", {
+      const res = await fetch("https://ticket-backend-r5ksnrq64-creativedelights-projects.vercel.app/api/tickets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
