@@ -35,7 +35,7 @@ export async function stkPush(phone: string, amount: number) {
     PartyA: phone,
     PartyB: shortcode,
     PhoneNumber: phone,
-    CallBackURL: "https://218e0dc30255.ngrok-free.app/mpesa/callback/",
+    CallBackURL: "https://ticket-backend-r5ksnrq64-creativedelights-projects.vercel.app/mpesa/callback/",
     AccountReference: "Ticket Purchase",
     TransactionDesc: "Payment for event ticket",
   };
