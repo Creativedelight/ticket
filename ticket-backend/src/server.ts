@@ -1,4 +1,4 @@
-// server.ts
+// src/server.ts
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
@@ -32,5 +32,5 @@ app.get("/", (req, res) => {
   res.send("Backend is running ✅");
 });
 
-// ✅ Export app instead of app.listen
+// ✅ Export app only
 export default app;

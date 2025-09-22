@@ -81,7 +81,7 @@ export function TicketPurchasePage() {
 
     try {
       // 1️⃣ Save ticket to backend
-      const res = await fetch("https://ticket-backend-r5ksnrq64-creativedelights-projects.vercel.app/api/tickets", {
+      const res = await fetch("https://ticket-backend-jxa4bl9wx-creativedelights-projects.vercel.app/api/tickets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
