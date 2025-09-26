@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import kaleeImage from "./kalee.jpg";
 
-export function HomePageHero() {
+export function HomePage() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
