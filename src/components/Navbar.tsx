@@ -37,9 +37,7 @@ export function Navbar() {
             <Link to="" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
               Home
             </Link>
-            <Link to="/my-tickets" className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-              My Tickets
-            </Link>
+           
             
           </div>
         </div>}

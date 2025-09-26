@@ -1,11 +1,13 @@
-// import React from 'react';
 import React, { useEffect, useState } from "react";
-
-import { Link } from 'react-router-dom';
-import { CalendarIcon, SearchIcon, TicketIcon, TrendingUpIcon, MapPinIcon } from 'lucide-react';
-import kaleeImage from "./kalee.jpg"; 
-
-
+import { Link } from "react-router-dom";
+import {
+  CalendarIcon,
+  SearchIcon,
+  TicketIcon,
+  TrendingUpIcon,
+  MapPinIcon,
+} from "lucide-react";
+import kaleeImage from "./kalee.jpg";
 
 export function HomePageHero() {
   const [loaded, setLoaded] = useState(false);
@@ -16,39 +18,39 @@ export function HomePageHero() {
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
-      {/* Background image */}
-      <img
-        src={kaleeImage}
-        alt="KALEE Night"
-        className={`absolute top-0 left-0 w-full h-full object-cover transition-all duration-2000 ease-in-out
-          ${loaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-110 blur-md"}`}
-      />
+    <div className="relative w-full overflow-hidden">
+      {/* Hero Section */}
+      <div className="relative w-full h-screen overflow-hidden">
+        {/* Background image */}
+        <img
+          src={kaleeImage}
+          alt="KALEE Night"
+          className={`absolute top-0 left-0 w-full h-full object-cover transition-all duration-2000 ease-in-out
+            ${loaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-110 blur-md"}`}
+        />
 
-      {/* Overlay gradient */}
-      <div className="absolute top-0 left-0 w-full h-full bg-black/40"></div>
+        {/* Overlay gradient */}
+        <div className="absolute top-0 left-0 w-full h-full bg-black/40"></div>
 
-      {/* Text content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
-        <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6">
-          KALEE NIGHT
-        </h1>
-        <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl">
-          Experience the biggest KALEE NIGHT of the year with unforgettable
-          performances, lights, and vibes.
-        </p>
-        <Link
-          to="/events/kalee-night"
-          className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition"
-        >
-          Get Tickets
-        </Link>
+        {/* Text content */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6">
+            KALEE NIGHT
+          </h1>
+          <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl">
+            Experience the biggest KALEE NIGHT of the year with unforgettable
+            performances, lights, and vibes.
+          </p>
+          <Link
+            to="/events/kalee-night"
+            className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition"
+          >
+            Get Tickets
+          </Link>
+        </div>
       </div>
-    </div>
-  );
-}
-     
-      {/* Featured Event (replaces Upcoming Events) */}
+
+      {/* Featured Event */}
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-8">
@@ -62,7 +64,6 @@ export function HomePageHero() {
                   alt="Rock Concert"
                   className="h-64 w-full object-cover md:h-full"
                 />
-
               </div>
               <div className="p-8 md:w-1/2">
                 <h2 className="mt-2 text-2xl font-extrabold text-gray-900">
@@ -77,13 +78,14 @@ export function HomePageHero() {
                   <span>THIKA CAPRICON LOUNGE GATITU JUNCTION</span>
                 </div>
                 <p className="mt-4 text-gray-600">
-                  Experience the biggest KALEE NIGHT of the year with performances from
-                  Samkey Star, Gloria Kotestes, Yoyo Zing, Zona Last Born and Tobby Mr.Romantic. Don't miss this epic,
-                  lights, and unforgettable moments.
+                  Experience the biggest KALEE NIGHT of the year with performances
+                  from Samkey Star, Gloria Kotestes, Yoyo Zing, Zona Last Born and
+                  Tobby Mr.Romantic. Don't miss this epic, lights, and unforgettable
+                  moments.
                 </p>
                 <div className="mt-6">
                   <Link
-                    to="/events/kalee night"
+                    to="/events/kalee-night"
                     className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
                   >
                     <TicketIcon className="h-5 w-5 mr-2" />
@@ -116,7 +118,7 @@ export function HomePageHero() {
                 Find Your Event
               </h3>
               <p className="mt-2 text-base text-gray-500">
-                
+                Browse through upcoming events easily.
               </p>
             </div>
             <div className="text-center">
@@ -138,7 +140,7 @@ export function HomePageHero() {
                 Secure Payment
               </h3>
               <p className="mt-2 text-base text-gray-500">
-                Pay securely using mpesa method and get instant ticket delivery.
+                Pay securely using Mpesa and get instant ticket delivery.
               </p>
             </div>
           </div>
@@ -192,5 +194,6 @@ export function HomePageHero() {
           </div>
         </div>
       </div>
-    
-  
+    </div>
+  );
+}
