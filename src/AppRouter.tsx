@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
-import { EventsPage } from './pages/EventsPage';
 import { EventDetailPage } from './pages/EventDetailPage';
 import { TicketPurchasePage } from './pages/TicketPurchasePage';
 import { ConfirmationPage } from './pages/ConfirmationPage';
@@ -12,7 +11,6 @@ export function AppRouter() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="events" element={<EventsPage />} />
           <Route path="events/:eventId" element={<EventDetailPage />} />
           <Route path="purchase/:eventId" element={<TicketPurchasePage />} />
           <Route path="confirmation/:ticketId" element={<ConfirmationPage />} />
