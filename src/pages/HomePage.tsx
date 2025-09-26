@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import React, { useEffect, useState } from "react";
 
 import { Link } from 'react-router-dom';
@@ -192,6 +192,5 @@ export function HomePageHero() {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    
+  
