@@ -11,7 +11,7 @@ export function AppRouter() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="events/:eventSlug" element={<EventDetailsPage />} />
+          <Route path="events/:eventSlug" element={<EventDetailPage />} />
           <Route path="purchase/:eventId" element={<TicketPurchasePage />} />
           <Route path="confirmation/:ticketId" element={<ConfirmationPage />} />
           <Route path="my-tickets" element={<UserDashboardPage />} />
