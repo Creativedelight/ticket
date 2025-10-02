@@ -74,48 +74,44 @@ const handlePayment = async (ticketCode: string) => {
         try {
           // ✅ verify payment on backend
           const verifyRes = await fetch(
-            "https://ticket-backend-mu.vercel.app/api/paystack/verify",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ reference: response.reference }),
-            }
-          );
+  `https://ticket-backend-mu.vercel.app/api/paystack/verify/${response.reference}`
+);
 
-          const verifyData = await verifyRes.json();
+const verifyData = await verifyRes.json();
 
-          if (verifyData.status === "success") {
-            // ✅ Save ticket in backend
-            await fetch("https://ticket-backend-mu.vercel.app/api/tickets", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                ticketCode,
-                eventName: event.title,
-                eventDate: event.date,
-                eventTime: event.time,
-                location: event.location,
-                ticketType,
-                seats: ticketQty,
-                email: formData.email,
-                name: `${formData.firstName} ${formData.lastName}`,
-              }),
-            });
+if (verifyData.status === true || verifyData.data?.status === "success") {
+  // ✅ Save ticket in backend
+  await fetch("https://ticket-backend-mu.vercel.app/api/tickets", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      ticketCode,
+      eventName: event.title,
+      eventDate: event.date,
+      eventTime: event.time,
+      location: event.location,
+      ticketType,
+      seats: ticketQty,
+      email: formData.email,
+      name: `${formData.firstName} ${formData.lastName}`,
+    }),
+  });
 
-            navigate(`/confirmation/${ticketCode}`, {
-              state: {
-                ticketCode,
-                event,
-                ticketType,
-                ticketQty,
-                ticketPrice,
-                subtotal,
-                formData,
-              },
-            });
-          } else {
-            alert("Payment could not be verified. Please try again.");
-          }
+  navigate(`/confirmation/${ticketCode}`, {
+    state: {
+      ticketCode,
+      event,
+      ticketType,
+      ticketQty,
+      ticketPrice,
+      subtotal,
+      formData,
+    },
+  });
+} else {
+  alert("Payment could not be verified. Please try again.");
+}
+
         } catch (err) {
           console.error("Verification error:", err);
           alert("Error verifying payment.");
