@@ -49,7 +49,7 @@ const eventData = {
     {
       id: "diehard",
       name: "DIE HARD",
-      price: 500,
+      price: 5,
       description: "Standard entry ticket",
     },
   ],
