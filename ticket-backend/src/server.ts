@@ -4,7 +4,7 @@ import cors from "cors";
 
 import ticketsRouter from "./routes/tickets";
 import eventsRouter from "./routes/events";
-import mpesaRouter from "./routes/mpesa";
+import mpesaRouter from "./routes/paystack";
 
 const app = express();
 
