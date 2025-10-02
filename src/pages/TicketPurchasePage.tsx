@@ -54,32 +54,38 @@ export function TicketPurchasePage() {
   };
 
   // ✅ Paystack payment function
-  const handlePayment = async (ticketCode: string) => {
+ // ✅ Paystack payment function
+const handlePayment = async (ticketCode: string) => {
   if (!window.PaystackPop) {
     alert("Payment system not loaded. Please refresh and try again.");
     return;
   }
 
   const handler = window.PaystackPop.setup({
-    key: "pk_live_5c82751552ff9e747491a86a62192d140cc3869b", // 👈 directly here
+    key: "pk_live_5c82751552ff9e747491a86a62192d140cc3869b", // 👈 your live public key
     email: formData.email,
-    amount: subtotal * 100, // Paystack expects amount in kobo (KES * 100)
+    amount: subtotal * 100, // Paystack expects kobo (KES * 100)
     currency: "KES",
-  
 
-    // ❌ don't use async here
     callback: function (response: any) {
       console.log("Payment success:", response);
 
-      // ✅ wrap async logic inside an IIFE
       (async () => {
         try {
+          // ✅ verify payment on backend
           const verifyRes = await fetch(
-            `https://ticket-backend-mu.vercel.app/api/paystack/verify/${response.reference}`
+            "https://ticket-backend-mu.vercel.app/api/paystack/verify",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ reference: response.reference }),
+            }
           );
+
           const verifyData = await verifyRes.json();
 
           if (verifyData.status === "success") {
+            // ✅ Save ticket in backend
             await fetch("https://ticket-backend-mu.vercel.app/api/tickets", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -97,7 +103,15 @@ export function TicketPurchasePage() {
             });
 
             navigate(`/confirmation/${ticketCode}`, {
-              state: { ticketCode, event, ticketType, ticketQty, ticketPrice, subtotal, formData },
+              state: {
+                ticketCode,
+                event,
+                ticketType,
+                ticketQty,
+                ticketPrice,
+                subtotal,
+                formData,
+              },
             });
           } else {
             alert("Payment could not be verified. Please try again.");
@@ -106,7 +120,7 @@ export function TicketPurchasePage() {
           console.error("Verification error:", err);
           alert("Error verifying payment.");
         }
-      })(); // end async IIFE
+      })();
     },
 
     onClose: function () {
@@ -116,6 +130,7 @@ export function TicketPurchasePage() {
 
   handler.openIframe();
 };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
