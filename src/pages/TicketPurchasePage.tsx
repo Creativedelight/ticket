@@ -65,7 +65,7 @@ export function TicketPurchasePage() {
     email: formData.email,
     amount: subtotal * 100, // Paystack expects amount in kobo (KES * 100)
     currency: "KES",
-    ref: ticketCode,
+  
 
     // ❌ don't use async here
     callback: function (response: any) {
