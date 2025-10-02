@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useLocation, Link, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon, LockIcon } from "lucide-react";
-import kaleeImage from "./kalee.jpg"; 
+import kaleeImage from "./kalee.jpg";
 
-// Mock event data (replace with real fetch)
+declare global {
+  interface Window {
+    PaystackPop: any;
+  }
+}
+
+// Mock event data (replace with real fetch later)
 const eventData = {
   id: "1",
   title: "KALEE NIGHT",
@@ -13,14 +19,9 @@ const eventData = {
   image: kaleeImage,
 };
 
-// helper to parse query params
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
 export function TicketPurchasePage() {
   const { eventId } = useParams();
-  const query = useQuery();
+  const query = new URLSearchParams(useLocation().search);
   const navigate = useNavigate();
 
   const ticketType = query.get("type") || "General";
@@ -36,7 +37,16 @@ export function TicketPurchasePage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // ✅ Bring event back
   const event = eventData;
+
+  // 🔥 Load Paystack script when component mounts
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://js.paystack.co/v1/inline.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,18 +55,20 @@ export function TicketPurchasePage() {
 
   // ✅ Paystack payment function
   const handlePayment = async (ticketCode: string) => {
-    const handler = (window as any).PaystackPop.setup({
-      key: process.env.PAYSTACK_PUBLIC_KEY,
+    if (!window.PaystackPop) {
+      alert("Payment system not loaded. Please refresh and try again.");
+      return;
+    }
 
+    const handler = window.PaystackPop.setup({
+      key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!, // 👈 must start with NEXT_PUBLIC_
       email: formData.email,
       amount: subtotal * 100, // Paystack expects kobo (KES * 100)
       currency: "KES",
       ref: ticketCode,
       callback: async function (response: any) {
-        // 👌 Payment completed successfully
         console.log("Payment success:", response);
 
-        // Verify transaction with backend
         try {
           const verifyRes = await fetch(
             `https://ticket-backend-mu.vercel.app/api/paystack/verify/${response.reference}`
@@ -64,7 +76,6 @@ export function TicketPurchasePage() {
           const verifyData = await verifyRes.json();
 
           if (verifyData.status === "success") {
-            // ✅ Save ticket only AFTER payment confirmation
             await fetch("https://ticket-backend-mu.vercel.app/api/tickets", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -74,24 +85,15 @@ export function TicketPurchasePage() {
                 eventDate: event.date,
                 eventTime: event.time,
                 location: event.location,
-                ticketType: ticketType,
+                ticketType,
                 seats: ticketQty,
                 email: formData.email,
                 name: `${formData.firstName} ${formData.lastName}`,
               }),
             });
 
-            // Redirect to confirmation page
             navigate(`/confirmation/${ticketCode}`, {
-              state: {
-                ticketCode,
-                event,
-                ticketType,
-                ticketQty,
-                ticketPrice,
-                subtotal,
-                formData,
-              },
+              state: { ticketCode, event, ticketType, ticketQty, ticketPrice, subtotal, formData },
             });
           } else {
             alert("Payment could not be verified. Please try again.");
@@ -102,7 +104,6 @@ export function TicketPurchasePage() {
         }
       },
       onClose: function () {
-        // ❌ User closed payment window or cancelled
         alert("Payment cancelled. Ticket not generated.");
       },
     });
@@ -110,7 +111,6 @@ export function TicketPurchasePage() {
     handler.openIframe();
   };
 
-  // ✅ Handle purchase submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -119,7 +119,6 @@ export function TicketPurchasePage() {
       "TKT" + Math.random().toString(36).substr(2, 9).toUpperCase();
 
     try {
-      // 🚫 Do NOT save ticket before payment
       await handlePayment(ticketCode);
     } catch (err) {
       console.error(err);
