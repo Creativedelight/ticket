@@ -4,9 +4,9 @@ import cors from "cors";
 
 import ticketsRouter from "./routes/tickets";
 import eventsRouter from "./routes/events";
-import mpesaRouter from "./routes/paystack";
+import paystackRouter from "./routes/paystack";
 
-const app = express();
+const app = express(); // ✅ must come before app.use()
 
 // ✅ CORS: allow frontend domain
 const allowedOrigins = [
@@ -31,10 +31,10 @@ app.use(
 
 app.use(express.json());
 
-// Routes
+// ✅ Routes
 app.use("/api/events", eventsRouter);
 app.use("/api/tickets", ticketsRouter);
-app.use("/api/mpesa", mpesaRouter);
+app.use("/api/paystack", paystackRouter); // 👈 fixed: use paystack not mpesa
 
 app.get("/", (req, res) => res.send("Backend is running ✅"));
 
