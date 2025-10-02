@@ -61,7 +61,7 @@ export function TicketPurchasePage() {
   }
 
   const handler = window.PaystackPop.setup({
-    key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!, // 👈 must be NEXT_PUBLIC_
+    key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!, // ✅ loads correctly now
     email: formData.email,
     amount: subtotal * 100, // Paystack expects amount in kobo (KES * 100)
     currency: "KES",
