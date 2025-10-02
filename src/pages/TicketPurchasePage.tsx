@@ -55,20 +55,24 @@ export function TicketPurchasePage() {
 
   // ✅ Paystack payment function
   const handlePayment = async (ticketCode: string) => {
-    if (!window.PaystackPop) {
-      alert("Payment system not loaded. Please refresh and try again.");
-      return;
-    }
+  if (!window.PaystackPop) {
+    alert("Payment system not loaded. Please refresh and try again.");
+    return;
+  }
 
-    const handler = window.PaystackPop.setup({
-      key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!, // 👈 must start with NEXT_PUBLIC_
-      email: formData.email,
-      amount: subtotal * 100, // Paystack expects kobo (KES * 100)
-      currency: "KES",
-      ref: ticketCode,
-      callback: async function (response: any) {
-        console.log("Payment success:", response);
+  const handler = window.PaystackPop.setup({
+    key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!, // 👈 must be NEXT_PUBLIC_
+    email: formData.email,
+    amount: subtotal * 100, // Paystack expects amount in kobo (KES * 100)
+    currency: "KES",
+    ref: ticketCode,
 
+    // ❌ don't use async here
+    callback: function (response: any) {
+      console.log("Payment success:", response);
+
+      // ✅ wrap async logic inside an IIFE
+      (async () => {
         try {
           const verifyRes = await fetch(
             `https://ticket-backend-mu.vercel.app/api/paystack/verify/${response.reference}`
@@ -102,14 +106,16 @@ export function TicketPurchasePage() {
           console.error("Verification error:", err);
           alert("Error verifying payment.");
         }
-      },
-      onClose: function () {
-        alert("Payment cancelled. Ticket not generated.");
-      },
-    });
+      })(); // end async IIFE
+    },
 
-    handler.openIframe();
-  };
+    onClose: function () {
+      alert("Payment cancelled. Ticket not generated.");
+    },
+  });
+
+  handler.openIframe();
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
